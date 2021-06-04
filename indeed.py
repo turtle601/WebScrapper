@@ -33,3 +33,40 @@ def request_pages_url(pages):
         req = requests.get(f"{url}&start={page*limit}")
         print(req.status_code)
     return 
+
+# 해당 페이지 안의 채용 목록 중 직군들만 나열
+def request_jobs(page):
+    page -= 1
+    req = requests.get(f"{url}&start={page*limit}")
+    soup = BeautifulSoup(req.text,"html.parser")
+    
+    results = soup.find_all("div", class_ = "jobsearch-SerpJobCard")
+    
+    for result in results:
+        title = result.find("h2", class_ = "title").find("a")["title"]
+        print(title)
+    
+    return 
+
+# 해당 페이지 안의 채용 목록 중 회사만 나열
+def request_company(page):
+    page -= 1
+    req = requests.get(f"{url}&start={page*limit}")
+    soup = BeautifulSoup(req.text,"html.parser")
+    
+    results = soup.find_all("div", class_ = "jobsearch-SerpJobCard")
+
+    for result in results:
+        title = result.find("h2", class_ = "title").find("a")["title"]
+        company = result.find("span", class_ = "company")
+        
+        company_link = company.find('a')
+        
+        if company_link is None:
+            result = company.string
+        else:
+            result = company_link.string
+        
+        print(result.strip())    
+
+    return 
