@@ -1,11 +1,6 @@
-from indeed import extract_indeed_page, request_company,request_pages_url,request_jobs,request_company
+from indeed import get_indeed_jobs
+from stackoverflow import get_so_jobs
 
-# page = extract_indeed_page()
+merge_jobs = get_indeed_jobs() + get_so_jobs()
 
-# request_pages_url(page)
-
-request_jobs(0)
-
-print("----------------------------------------------")
-
-request_company(0)
+print(merge_jobs)

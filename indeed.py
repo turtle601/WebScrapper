@@ -1,4 +1,3 @@
-from typing import List
 import requests
 from bs4 import BeautifulSoup
 
@@ -70,3 +69,53 @@ def request_company(page):
         print(result.strip())    
 
     return 
+
+#일자리 중 직군, 회사에 대한 내용만
+def extract_job(html):
+    title = html.find("h2", class_ = "title").find("a")["title"]
+    company = html.find("span", class_ = "company")
+    location = html.find("div", class_ = "recJobLoc")["data-rc-loc"]
+    job_id = html["data-jk"]
+    
+    company_link = company.find('a')
+        
+    if company_link is None:
+        company = company.string
+    else:
+        company = company_link.string
+
+    company = company.strip()
+
+    return {
+        'title' : title, 
+        'company': company ,
+        'location': location,
+        'link': f"https://www.indeed.com/viewjob?jk={job_id}"
+        }
+
+# 일자리 추출 - request_jobs() + requests_company 합병 
+def extract_indeed_jobs(page):
+    jobs = []
+    page -= 1
+
+    #입력받은 page를 가져옴
+    req = requests.get(f"{url}&start={page*limit}")
+    soup = BeautifulSoup(req.text,"html.parser")
+
+    results = soup.find_all("div", class_ = "jobsearch-SerpJobCard")
+
+    for result in results:
+        job = extract_job(result)
+        jobs.append(job)
+    
+    return jobs
+
+# 최종
+def get_indeed_jobs():
+    indeed = []
+    pages = extract_indeed_page()
+
+    for page in pages:
+        indeed += extract_indeed_jobs(page)
+    
+    return indeed
