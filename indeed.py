@@ -2,10 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 
 limit = 50
-url = f"https://www.indeed.com/jobs?as_and=python&limit={limit}"
 
 #해당 url의 페이지 숫자들을 가져온다.
-def extract_indeed_page(): 
+def extract_indeed_page(url): 
     # indeed의 사이트의 모든 내용을 가져온다. 
     indeed_result = requests.get(url)
 
@@ -27,14 +26,14 @@ def extract_indeed_page():
     return pages
 
 # 페이지들의 링크들을 request
-def request_pages_url(pages):
+def request_pages_url(pages,url):
     for page in pages:
         req = requests.get(f"{url}&start={page*limit}")
         print(req.status_code)
     return 
 
 # 해당 페이지 안의 채용 목록 중 직군들만 나열
-def request_jobs(page):
+def request_jobs(page,url):
     page -= 1
     req = requests.get(f"{url}&start={page*limit}")
     soup = BeautifulSoup(req.text,"html.parser")
@@ -48,7 +47,7 @@ def request_jobs(page):
     return 
 
 # 해당 페이지 안의 채용 목록 중 회사만 나열
-def request_company(page):
+def request_company(page,url):
     page -= 1
     req = requests.get(f"{url}&start={page*limit}")
     soup = BeautifulSoup(req.text,"html.parser")
@@ -94,7 +93,7 @@ def extract_job(html):
         }
 
 # 일자리 추출 - request_jobs() + requests_company 합병 
-def extract_indeed_jobs(page):
+def extract_indeed_jobs(page,url):
     jobs = []
     page -= 1
 
@@ -111,11 +110,13 @@ def extract_indeed_jobs(page):
     return jobs
 
 # 최종
-def get_indeed_jobs():
+def get_indeed_jobs(word):
+    
+    url = f"https://www.indeed.com/jobs?as_and={word}&limit={limit}"
     indeed = []
-    pages = extract_indeed_page()
+    pages = extract_indeed_page(url)
 
     for page in pages:
-        indeed += extract_indeed_jobs(page)
+        indeed += extract_indeed_jobs(page,url)
     
     return indeed

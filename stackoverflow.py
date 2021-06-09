@@ -1,9 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = f"https://stackoverflow.com/jobs?q=python&sort=i"
-
-def so_lastpage():
+def so_lastpage(url):
     so_result = requests.get(url)
     so_soup = BeautifulSoup(so_result.text,"html.parser")
 
@@ -28,7 +26,7 @@ def extract_so_jobs(html):
         }
 
 
-def extract_so_page(last_page):
+def extract_so_page(last_page,url):
     jobs = []
     for page in range(1,last_page+1):
         req = requests.get(f"{url}&pg={page}")
@@ -42,8 +40,10 @@ def extract_so_page(last_page):
 
     return jobs
 
-def get_so_jobs():
-    last_page = so_lastpage()
-    so_jobs = extract_so_page(last_page)
+def get_so_jobs(word):
+    url = f"https://stackoverflow.com/jobs?q={word}&sort=i"
+    
+    last_page = so_lastpage(url)
+    so_jobs = extract_so_page(last_page,url)
     
     return so_jobs
