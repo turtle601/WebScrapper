@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+# 마지막 페이지의 숫자를 가져옴
 def so_lastpage(url):
     so_result = requests.get(url)
     so_soup = BeautifulSoup(so_result.text,"html.parser")
@@ -10,6 +11,7 @@ def so_lastpage(url):
 
     return int(last_page)
 
+# 해당 tag에 있는 직업의 title, company, location, link의 정보를 가져옴
 def extract_so_jobs(html):
     title = html.find("h2",class_="mb4").find("a")["title"]
     # recursive를 통해 첫번째의 span만 가져온다. 
@@ -25,7 +27,7 @@ def extract_so_jobs(html):
         "link": f"https://stackoverflow.com/jobs/{job_id}"
         }
 
-
+# 모든 페이지들의 직업 정보를 가져옴 -> List
 def extract_so_page(last_page,url):
     jobs = []
     for page in range(1,last_page+1):
@@ -40,6 +42,7 @@ def extract_so_page(last_page,url):
 
     return jobs
 
+# 모든 페이지들의 직업 정보를 가져온다. 
 def get_so_jobs(word):
     url = f"https://stackoverflow.com/jobs?q={word}&sort=i"
     

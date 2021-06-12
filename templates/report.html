@@ -5,16 +5,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Report</title>
+    <!-- 직업들의 정보를 표를 통해 보기 쉽게 정리-->
+    <style>
+        section{
+            display:grid;
+            gap: 20px;
+            grid-template-columns: repeat(4,1fr);
+        }
+        
+
+    </style>
+
 </head>
 <body>
     <h2> Job Report </h2>
     <p>{{jobCounts}}개의 {{searchingBy}} 관련 직업을 찾았습니다.</p>
-    {% for job in jobs %}
-        <span>{{job.title}}</span>
-        <span>{{job.company}}</span>
-        <span>{{job.location}}</span>
-        <span>{{job.link}}</span>
-    {%endfor%}
-
+    <a href = "/export?word={{searchingBy}}">Download jobs CSV file</a>
+    <section>
+        <!-- 표의 첫번째 columns-->
+        <h4>Title</h4>
+        <h4>Company</h4>
+        <h4>Location</h4>
+        <h4>Link</h4>
+        
+        <!-- 직업들의 정보-->
+        {% for job in jobs %}
+            <span>{{job.title}}</span>
+            <span>{{job.company}}</span>
+            <span>{{job.location}}</span>
+            <a href = "{{job.link}}" target = _blank>{{job.link}}</a>
+        {%endfor%}
+    </section>
 </body>
 </html>
