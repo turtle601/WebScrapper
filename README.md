@@ -13,6 +13,7 @@ link로 내용을 정리하였고 해당 정보를 csv파일로 만들어 다운
 ## 👏 기술 스택
 * 언어: python
 * 웹 프레임 워크: Flask
+* 사용 패키지 : requests, BeautifulSoup
 
 ## 프로젝트 결과
 
