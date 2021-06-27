@@ -7,6 +7,10 @@ from flask import send_file
 
 from make_csv_file import make_csv
 from indeed import get_indeed_jobs
+
+from weworkremotely import get_weworkremotely_jobs
+from remoteok import get_remoteok_jobs
+
 from stackoverflow import get_so_jobs
 
 app = Flask("__name__")
@@ -32,7 +36,7 @@ def report():
         if fromDB:
             jobs = fromDB
         else:
-            jobs = get_indeed_jobs(word)
+            jobs = get_indeed_jobs(word) + get_weworkremotely_jobs(word) + get_remoteok_jobs(word)
             dic[word] = jobs
 
     else:
@@ -71,5 +75,5 @@ def export():
     except:
         return redirect("/")
 
-if __name__ == "__main__": app.run(host="0.0.0.0", port=9000)
+if __name__ == "__main__": app.run(host="127.0.0.1", port=9000)
 
